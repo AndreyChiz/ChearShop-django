@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "doucoffe"
+version = "0.1"
+description = "coffe shop"
+authors = ["Andrey C <achizhovjob@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.2.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
