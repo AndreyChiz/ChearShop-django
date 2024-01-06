@@ -29,4 +29,12 @@ class Products(models.Model):
         verbose_name_plural = 'Продукты'
 
     def __str__(self):
-        return f'{self.name}, количество - {self.quantity}'
+        return f'{self.name}, количество - {self.quantity}шт'
+
+    def display_id(self):
+        return f"{self.id:05}" # добавляет нолей до 5 знаков
+
+    def sell_price(self):
+        if self.discount:
+            return round(self.price - self.price*self.discount/100, 2)
+        return self.price

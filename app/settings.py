@@ -129,6 +129,14 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+MEDIA_URL = 'media/' # название url преффикса
+MEDIA_ROOT = BASE_DIR / 'media' # константа, которая хранит путь, где находятся медиафайлы
+# BASE_DIR - путь к к корню
+# / символ обьединенеия
+# media/ - внутренний путь
+
+
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
