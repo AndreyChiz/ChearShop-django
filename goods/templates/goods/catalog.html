@@ -59,7 +59,7 @@
                                 <a href="{% url "catalog:product" product.slug %}">
                                     <p class="card-title">{{ product.name }}</p>
                                 </a>
-                                <p class="card-text text-truncate">{{ product.description }}</p>
+                                <p class="card-text">{{ product.description|truncatechars:50 }}</p> <!-- обрезатьтекст до n символов-->
                                 <p class="product_id">id: {{ product.display_id }}</p>
                                 	<div class="d-flex justify-content-between">
 
@@ -91,14 +91,62 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center my-4">
                         <div class="custom-shadow d-flex">
-                            <li class="page-item disabled">
-                              <a class="page-link">Previous</a>
+
+                            <li class="page-item {% if not goods.has_previous %} disabled {% endif %}" >
+                                  <!-- has_previous возвращает true если нет предидущего
+                                  тег disabled означает что элемент не будет виден.
+                                  итак. <ели (не есть) нет предидущего элемента то есть тег disabled и элемент не виден>
+                                  -->
+                                  <a class="page-link" href="
+                                        {% if goods.has_previous %}
+                                            {% url 'catalog:index' slag_url goods.previous_page_number %}
+
+                                        {% else %}
+                                            #
+                                        {% endif %}">Назад</a>
+                            <!-- если есть предидущий элемент, формируем ссылку на предидущую страницу, если нет то заглушка
+                            аналогично делать модуль СЛЕДУЮЩАЯ-->
+
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                              <a class="page-link" href="#">Next</a>
+
+                                {% for page in goods.paginator.page_range %} <!-- номер страницы, после того как в контроллере
+                                получили goods при помощи пагинатора у goods появились все методы пагинатора в том чиле page_range()
+                                который возвращает количество страниц-->
+
+                                    {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
+                                        <!--если элемент пагинации (номер) больше текущего номера -2 и меньше текущего номера +2
+                                            то добавляем элемент пагинации -->
+                                            <li class="page-item  {% if goods.number == page %} active {% endif %} " >
+                                                <!-- (goods_number - текущая страница - из объекта paginator) если страница активна то выделяем ее -->
+                                                <a class="page-link" href="{% url "catalog:index" slag_url page %}">{{ page }}</a>
+                {#                              {% url "catalog:index" slag_url page %}  #}
+                                                <!-- эта строка удет формировать url из goods.urls.py
+                                                urlpatterns = [
+                                                    path('<slug:category_slug>', views.catalog, name='index'),
+                                                    path('<slug:category_slug>/<int:page>/', views.catalog, name='index'),
+                                                    ...]
+                                                "catalog:index" - основной путь по параметру name='index'
+                                                slag_url - передали в контекст перемнную из контроллера
+                                                page - переменная из итератора
+                                                -> путь соберется автоматически например http://localhost:8000/catalog/kuhnya/1/
+         -->                               </li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+
+                            <li class="page-item {% if not goods.has_next %} disabled {% endif %}" >
+                                  <!-- has_previous возвращает true если нет предидущего
+                                  тег disabled означает что элемент не будет виден.
+                                  итак. <ели (не есть) нет предидущего элемента то есть тег disabled и элемент не виден>
+                                  -->
+                                  <a class="page-link" href="
+                                        {% if goods.has_next %}
+                                            {% url 'catalog:index' slag_url goods.next_page_number %}
+                                        {% else %}
+                                            #
+                                        {% endif %}">Вперед</a>
+                            <!-- если есть предидущий элемент, формируем ссылку на предидущую страницу, если нет то заглушка -->
                             </li>
                         </div>
                     </ul>

@@ -11,12 +11,13 @@ def catalog(request, category_slug, page=1):
     else:
         goods = get_list_or_404(Products.objects.filter(category__slug=category_slug))
 
-    paginator = Paginator(goods, 3)
+    paginator = Paginator(goods, 3) # goods в любом случае проходит через пагинатор
     current_page = paginator.page(page)
 
     context = {
         "title": "Home - Каталог",
         "goods": current_page,
+        "slag_url": category_slug
     }
     return render(request, 'goods/catalog.html', context)
 
